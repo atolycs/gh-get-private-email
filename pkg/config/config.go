@@ -12,4 +12,5 @@ func Userset(c string) {
 
 func Getconfig (c ...string) {
   git.Exec("config", "--local", "--get", c)
+  return
 }
