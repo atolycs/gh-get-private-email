@@ -5,8 +5,10 @@ VERSION = 0.0.1
 GO 			= go
 GOBUILD = $(GO) build
 
+DIST := ./dist
+
 SRC	= main.go
-GO_OPTS = -o ./dist/$(@) -x -ldflags "-X github.com/atolycs/gh-get-private-email/internal/version.version=v$(VERSION)"
+GO_OPTS = -o $(DIST)/$(@) -x -ldflags "-X github.com/atolycs/gh-get-private-email/internal/version.version=v$(VERSION)"
 
 $(APP_NAME).exe: $(SRC)
 	CGO_ENABLED=1 GOOS=windows GOARCH=amd64 $(GOBUILD) $(GO_OPTS) $<
