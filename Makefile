@@ -7,10 +7,10 @@ GOBUILD = $(GO) build
 DIST := ./dist
 
 SRC	= main.go
-GO_OPTS = -x -ldflags "-X github.com/atolycs/gh-get-private-email/internal/version.version=v$(VERSION)"
+GO_OPTS = -x -ldflags "-X github.com/atolycs/gh-get-private-email/internal/version.version=$(VERSION)"
 
 $(APP_NAME).exe: $(SRC)
-	CGO_ENABLED=1 GOOS=windows GOARCH=amd64 $(GOBUILD) $(GO_OPTS) $<
+	CGO_ENABLED=1 GOOS=windows GOARCH=amd64 $(GOBUILD) -o $(DIST)/$(APP_NAME)_$(VERSION)-windows-amd64.exe $(GO_OPTS) $<
 
 $(APP_NAME): $(SRC)
 	CGO_ENABLED=1 GOOS=linux GOARCH=amd64 $(GOBUILD) -o $(DIST)/$(APP_NAME)_$(VERSION)-linux-amd64 $(GO_OPTS) $<
