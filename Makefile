@@ -1,20 +1,19 @@
 
-
 APP_NAME = gh-get-private-email
-VERSION = 0.0.1
+VERSION := $(shell git tag -l --sort=v:refname "v*" | tail -1)
 GO 			= go
 GOBUILD = $(GO) build
 
 DIST := ./dist
 
 SRC	= main.go
-GO_OPTS = -o $(DIST)/$(@) -x -ldflags "-X github.com/atolycs/gh-get-private-email/internal/version.version=v$(VERSION)"
+GO_OPTS = -x -ldflags "-X github.com/atolycs/gh-get-private-email/internal/version.version=v$(VERSION)"
 
 $(APP_NAME).exe: $(SRC)
 	CGO_ENABLED=1 GOOS=windows GOARCH=amd64 $(GOBUILD) $(GO_OPTS) $<
 
 $(APP_NAME): $(SRC)
-	CGO_ENABLED=1 GOOS=linux GOARCH=amd64 $(GOBUILD) $(GO_OPTS) $<
+	CGO_ENABLED=1 GOOS=linux GOARCH=amd64 $(GOBUILD) -o $(DIST)/$(APP_NAME)_$(VERSION)-linux-amd64 $(GO_OPTS) $<
 
 
 .PHONY: all win64 linux
