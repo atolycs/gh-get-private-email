@@ -1,11 +1,11 @@
 package version
 
 import (
-  "fmt"
+	"fmt"
 )
 
 var version string
 
 func CallVersion() {
-  fmt.Printf("ver: %s\n", version)
+	fmt.Printf("ver: %s\n", version)
 }
