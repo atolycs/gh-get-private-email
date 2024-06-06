@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: |
-          sudo apt update && sudo apt install -y g++-arm-linux-gnueabihf
+          sudo apt update && sudo apt install -y g++-arm-linux-gnueabihf build-essential
       - uses: cli/gh-extension-precompile@v1
         with:
           build_script_override: "build.sh"
