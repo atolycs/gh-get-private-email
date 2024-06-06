@@ -1,32 +1,39 @@
 
 APP_NAME = gh-get-private-email
 VERSION := $(shell git tag -l --sort=v:refname "v*" | tail -1)
-GO 			= go
+GO      = go
 GOBUILD = $(GO) build
 
 DIST := ./dist
 
+
+# GOOS Variables
+GOOSWIN     =	windows
+GOOSLINUX   =	linux
+GOARM := $(shell go env GOARM)
+GOARCH := $(shell go env GOARCH)
+CGO_ENABLED	=	1
+
+
+# Builded execute file
+WINBIN    = $(DIST)/$(APP_NAME)_$(VERSION)-windows-$(GOARCH).exe
+LINUXBIN  = $(DIST)/$(APP_NAME)_$(VERSION)-linux-$(GOARCH)
+
 SRC	= main.go
 GO_OPTS = -x -ldflags "-X github.com/atolycs/gh-get-private-email/internal/version.version=$(VERSION)"
 
-$(APP_NAME).exe: $(SRC)
-	CGO_ENABLED=1 GOOS=windows GOARCH=amd64 $(GOBUILD) -o $(DIST)/$(APP_NAME)_$(VERSION)-windows-amd64.exe $(GO_OPTS) $<
 
-$(APP_NAME): $(SRC)
-	CGO_ENABLED=1 GOOS=linux GOARCH=amd64 $(GOBUILD) -o $(DIST)/$(APP_NAME)_$(VERSION)-linux-amd64 $(GO_OPTS) $<
+$(WINBIN): $(SRC)
+	GOOS=$(GOOSWIN) GOARCH=$(GOARCH) CGO_ENABLED=1 $(GOBUILD) -o $@ $(GO_OPTS) $<
 
-$(APP_NAME)-debug: $(SRC)
-	CGO_ENABLED=1 GOOS=linux GOARCH=amd64 $(GOBUILD) -o $(APP_NAME) $(GO_OPTS) $<
+$(LINUXBIN): $(SRC)
+	GOOS=$(GOOSLINUX) GOARCH=$(GOARCH) GOARM=$(GOARM) CGO_ENABLED=1 $(GOBUILD) -o $@ $(GO_OPTS) $<
 
-.PHONY: all win64 linux debug-linux lint
 
-win64: $(APP_NAME).exe
-linux: $(APP_NAME)
-lint: 
-	$(GO)fmt -d -w .
+.PHONY: win64 linux
 
-debug-linux: $(APP_NAME)-debug
+win64: $(WINBIN)
+linux: $(LINUXBIN)
+
 
 all: win64 linux
-
-
