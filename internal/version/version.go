@@ -7,5 +7,5 @@ import (
 var version string
 
 func CallVersion() {
-	fmt.Printf("ver: %s\n", version)
+	fmt.Printf("get-private-email ver: %s\n", version)
 }
