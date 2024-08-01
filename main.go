@@ -7,18 +7,13 @@ import (
 
 	"github.com/atolycs/gh-get-private-email/internal/version"
 	"github.com/atolycs/gh-get-private-email/pkg/config"
+	"github.com/atolycs/gh-get-private-email/pkg/validate"
 	"github.com/cli/go-gh/v2/pkg/api"
-	"github.com/cli/go-gh/v2/pkg/repository"
 )
 
 func main() {
 	// fmt.Println("hi world, this is the gh-get-private-email extension!")
 	version.CallVersion()
-
-	if _, err := repository.Current(); err != nil {
-		fmt.Println("Not git repository")
-		os.Exit(1)
-	}
 
 	client, err := api.DefaultRESTClient()
 	if err != nil {
@@ -42,10 +37,14 @@ func main() {
 
 	commit_address := account_id + "+" + account_name + email_templates
 
-	fmt.Printf("%s\n", commit_address)
+	fmt.Printf("Getting commit address: %s\n", commit_address)
 
 	fmt.Println("Setting commit address...")
 
+	if _, err := validate.IsRepository(); err != nil {
+		fmt.Println("Not git repository")
+		os.Exit(1)
+	}
 	config.Userset(commit_address)
 
 	fmt.Println("Setup complete")
