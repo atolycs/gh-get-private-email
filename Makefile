@@ -28,7 +28,7 @@ TESTLINUXBIN = $(DIST)/$(APP_NAME)_$(VERSION)-linux-$(GOARCH)-test
 SRC	= main.go
 #GO_OPTS = -x -ldflags "-linkmode external -extldflags -static -X github.com/atolycs/gh-get-private-email/internal/version.version=$(VERSION)"
 
-ifeq ($(MAKECMDGOALS), 'win64')
+ifeq ($(MAKECMDGOALS), "win64")
 	CC := x86_64-w64-mingw32-gcc
 	CXX := x86_64-w64-mingw32-g++
 	GO_OPTS = -x -ldflags "-static -X github.com/atolycs/gh-get-private-email/internal/version.version=$(VERSION)"
@@ -38,7 +38,7 @@ endif
 
 
 $(WINBIN): $(SRC)
-	env
+	echo $(MAKECMDGOALS)
 	GOOS=$(GOOSWIN) GOARCH=$(GOARCH) CGO_ENABLED=1 CC=$(CC) CXX=$(CXX) $(GOBUILD) -o $@ $(GO_OPTS) $<
 
 $(LINUXBIN): $(SRC)
