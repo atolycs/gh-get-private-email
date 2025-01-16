@@ -13,7 +13,7 @@ $WINBIN="${DEST_FOLDER}/${BASE_FILENAME}-windows-$(go env GOARCH).exe"
 $WINGOOPTS="-x -ldflags \"-static -X github.com/atolycs/gh-get-private-email/internal/version.version=${VERSION}\""
 if [ "$COMSPEC" != "" ]; then
   echo "Windows Build mode"
-  CGO_ENABLED=1 ${GOBUILD} $WINGOOPTS -o $WINBIN main.go
+  CGO_ENABLED=1 ${GOBUILD} $WINGOOPTS -o $WINBIN
 else
   make linux
   make CC=arm-linux-gnueabihf-gcc CXX=arm-linux-gnueabihf-g++ GOARCH=arm GOARM=6 linux
