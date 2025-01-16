@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v3
       #- run: |
       #    sudo apt update && sudo apt install -y build-essential gcc-multilib gcc-mingw-w64 binutils-mingw-w64
-      - uses: cli/gh-extension-precompile@v1
+      - uses: cli/gh-extension-precompile@v2
         with:
           go_version: "1.22.3"
         env:
@@ -27,7 +27,7 @@ jobs:
       - uses: actions/checkout@v3
       - run: |
           sudo apt update && sudo apt install -y g++-arm-linux-gnueabihf build-essential
-      - uses: cli/gh-extension-precompile@v1
+      - uses: cli/gh-extension-precompile@v2
         with:
           build_script_override: "build_linux.sh"
           go_version: "1.22.3"
