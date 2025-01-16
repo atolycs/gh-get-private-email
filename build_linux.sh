@@ -7,4 +7,4 @@ echo "Building Linux execution..."
 make linux
 
 echo "Building Linux ARM execution..."
-make CC=arm-linux-gnueabihf-gcc GOARCH=arm GOARM=6 linux
+make CC=arm-linux-gnueabihf-gcc CXX=arm-linux-gnueabihf-g++ GOARCH=arm GOARM=6 linux
