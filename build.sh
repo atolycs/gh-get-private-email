@@ -11,7 +11,7 @@ DEST_FOLDER="dist/"
 # Output artifacts
 WINBIN="${DEST_FOLDER}/${BASE_FILENAME}-windows-$(go env GOARCH).exe"
 WINGOOPTS="-x -ldflags="-extldflags='-static'""
-VERSION_OPTS="-ldflags="-X github.com/atolycs/gh-get-private-email/internal/version.version=${VERSION}""
+VERSION_OPTS="-ldflags="-X \"github.com/atolycs/gh-get-private-email/internal/version.version=${VERSION}\"""
 
 if [ "$COMSPEC" != "" ]; then
   echo "Windows Build mode"
