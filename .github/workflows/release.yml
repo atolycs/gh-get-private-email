@@ -17,7 +17,7 @@ jobs:
       #    sudo apt update && sudo apt install -y build-essential gcc-multilib gcc-mingw-w64 binutils-mingw-w64
       - uses: cli/gh-extension-precompile@v2
         with:
-          go_version: "1.22.3"
+          go_version: "1.23.4"
         env:
           CGO_ENABLED: 1
 
@@ -30,6 +30,6 @@ jobs:
       - uses: cli/gh-extension-precompile@v2
         with:
           build_script_override: "build_linux.sh"
-          go_version: "1.22.3"
+          go_version: "1.23.4"
         env:
           CGO_ENABLED: 1
