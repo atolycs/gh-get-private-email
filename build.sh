@@ -17,6 +17,7 @@ echo ${VERSION} >>internal/version/app-version.txt
 if [ "$COMSPEC" != "" ]; then
   echo "Windows Build mode"
   CGO_ENABLED=1 ${GOBUILD} ${WINGOOPTS} ${VERSION_OPTS} -o $WINBIN
+  $WINBIN
 else
   make linux
   make CC=arm-linux-gnueabihf-gcc CXX=arm-linux-gnueabihf-g++ GOARCH=arm GOARM=6 linux
