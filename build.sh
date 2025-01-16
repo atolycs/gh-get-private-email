@@ -12,7 +12,7 @@ DEST_FOLDER="dist/"
 WINBIN="${DEST_FOLDER}/${BASE_FILENAME}-windows-$(go env GOARCH).exe"
 WINGOOPTS="-trimpath -v -x -ldflags="-extldflags='-static'""
 
-echo ${VERSION} >>internal/version/app-version.txt
+echo ${VERSION} >>./internal/version/app-version.txt
 
 if [ "$COMSPEC" != "" ]; then
   echo "Windows Build mode"
