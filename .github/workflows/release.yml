@@ -18,8 +18,8 @@ jobs:
       - uses: cli/gh-extension-precompile@v2
         with:
           go_version: "1.23.4"
-        env:
-          CGO_ENABLED: 1
+        #env:
+          #  CGO_ENABLED: 1
 
   release-linux:
     runs-on: ubuntu-latest
