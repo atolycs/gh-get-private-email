@@ -33,7 +33,8 @@ ifeq ($(MAKECMDGOALS), "win64")
 	CXX := x86_64-w64-mingw32-g++
 	GO_OPTS = -x -ldflags "-static -X github.com/atolycs/gh-get-private-email/internal/version.version=$(VERSION)"
 else
-	GO_OPTS = -x -ldflags "-linkmode external -extldflags -static -X github.com/atolycs/gh-get-private-email/internal/version.version=$(VERSION)"
+	#GO_OPTS = -x -ldflags "-linkmode external -extldflags -static -X github.com/atolycs/gh-get-private-email/internal/version.version=$(VERSION)"
+	GO_OPTS = -trimpath -x -ldflags "-linkmode external -extldflags -static"
 endif
 
 
@@ -41,7 +42,7 @@ $(WINBIN): $(SRC)
 	echo $(MAKECMDGOALS)
 	GOOS=$(GOOSWIN) GOARCH=$(GOARCH) CGO_ENABLED=1 CC=$(CC) CXX=$(CXX) $(GOBUILD) -o $@ $(GO_OPTS) $<
 
-$(LINUXBIN): $(SRC)
+$(LINUXBIN): $(SRC) 
 	GOOS=$(GOOSLINUX) GOARCH=$(GOARCH) GOARM=$(GOARM) CGO_ENABLED=1 $(GOBUILD) -o $@ $(GO_OPTS) $<
 
 $(TESTWINBIN): $(SRC)
@@ -53,8 +54,11 @@ $(TESTLINUXBIN): $(SRC)
 
 .PHONY: win64 linux test-linux test-win clean sign
 
-win64: $(WINBIN)
-linux: $(LINUXBIN)
+%/app-version.txt: 
+	echo $(VERSION) >> $@
+
+win64: internal/version/app-version.txt $(WINBIN)
+linux: internal/version/app-version.txt $(LINUXBIN)
 
 test-win: $(TESTWINBIN)
 test-linux: $(TESTLINUXBIN)

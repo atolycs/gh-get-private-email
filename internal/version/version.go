@@ -2,8 +2,10 @@ package version
 
 import (
 	"fmt"
+  _ "embed"
 )
 
+//go:embed version.txt
 var version string
 
 func CallVersion() {

@@ -1,3 +1,5 @@
 dist/*
 /gh-get-private-email
 /gh-get-private-email.exe
+internal/version/*version.txt
+*version.txt
