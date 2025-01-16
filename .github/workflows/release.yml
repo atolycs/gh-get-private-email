@@ -10,14 +10,14 @@ permissions:
 
 jobs:
   release-windows:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
-      - run: |
-          sudo apt update && sudo apt install -y build-essential gcc-multilib gcc-mingw-w64 binutils-mingw-w64
+      #- run: |
+      #    sudo apt update && sudo apt install -y build-essential gcc-multilib gcc-mingw-w64 binutils-mingw-w64
       - uses: cli/gh-extension-precompile@v1
         with:
-          build_script_override: "build_win.sh"
+          go_version: "1.22.3"
         env:
           CGO_ENABLED: 1
 
@@ -30,5 +30,6 @@ jobs:
       - uses: cli/gh-extension-precompile@v1
         with:
           build_script_override: "build_linux.sh"
+          go_version: "1.22.3"
         env:
           CGO_ENABLED: 1
