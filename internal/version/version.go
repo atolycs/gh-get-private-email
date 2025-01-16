@@ -5,7 +5,7 @@ import (
   _ "embed"
 )
 
-//go:embed version.txt
+//go:embed app-version.txt
 var version string
 
 func CallVersion() {
