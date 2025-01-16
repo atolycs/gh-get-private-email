@@ -26,7 +26,7 @@ TESTWINBIN   = $(DIST)/$(APP_NAME)_$(VERSION)-windows-$(GOARCH)-test.exe
 TESTLINUXBIN = $(DIST)/$(APP_NAME)_$(VERSION)-linux-$(GOARCH)-test
 
 SRC	= main.go
-GO_OPTS = -x -ldflags "-linkmode external -extldflags -static -X github.com/atolycs/gh-get-private-email/internal/version.version=$(VERSION)"
+GO_OPTS = -trimpath -x -ldflags "-linkmode external -extldflags -static -X github.com/atolycs/gh-get-private-email/internal/version.version=$(VERSION)"
 
 
 $(WINBIN): $(SRC)

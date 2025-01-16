@@ -2,6 +2,7 @@
 
 echo "Building Windows execution..."
 make win64
+
 echo "Building Linux execution..."
 make linux
 

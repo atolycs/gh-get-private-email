@@ -22,6 +22,7 @@ func main() {
 	}
 	response := struct {
 		Login string
+		Name  string
 		Id    int
 	}{}
 	err = client.Get("user", &response)
@@ -31,11 +32,14 @@ func main() {
 	}
 
 	account_id := strconv.Itoa(response.Id)
-	account_name := response.Login
+	account_login := response.Login
+  account_name := response.Name
+  
 
 	email_templates := "@users.noreply.github.com"
 
-	commit_address := account_id + "+" + account_name + email_templates
+	commit_address := account_id + "+" + account_login + email_templates
+
 
 	fmt.Printf("Getting commit address: %s\n", commit_address)
 
@@ -45,7 +49,9 @@ func main() {
 		fmt.Println("Not git repository")
 		os.Exit(1)
 	}
-	config.Userset(commit_address)
+	
+  config.Useremailset(commit_address)
+  config.Usernameset(account_name)
 
 	fmt.Println("Setup complete")
 	// fmt.Printf("running as %s\n", response.Login)
