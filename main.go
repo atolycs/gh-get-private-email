@@ -25,7 +25,7 @@ func main() {
 		Name  string
 		Id    int
 	}{}
-	err = client.Get("user", &response)
+	err := client.Get("user", &response)
 	if err != nil {
 		fmt.Println(err)
 		return
