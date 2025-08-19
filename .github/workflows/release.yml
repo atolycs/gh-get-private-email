@@ -23,10 +23,14 @@ jobs:
           #  CGO_ENABLED: 1
 
   release-linux:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix: 
+        os: [ubuntu-latest, ubuntu-24.04-arm]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
-      - run: |
+      - if: ${{ runner.os == "ubuntu-24.04-arm" }}
+        run: |
           sudo apt update && sudo apt install -y g++-arm-linux-gnueabihf build-essential
       - uses: cli/gh-extension-precompile@v2
         with:
