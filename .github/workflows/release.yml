@@ -25,11 +25,11 @@ jobs:
   release-linux:
     strategy:
       matrix: 
-        os: ["ubuntu-latest", "ubuntu-24.04-arm"]
+        os: ["ubuntu-latest", 'ubuntu-24.04-arm']
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
-      - if: ${{ runner.os == "ubuntu-24.04-arm" }}
+      - if: ${{ runner.os == 'ubuntu-24.04-arm' }}
         run: |
           sudo apt update && sudo apt install -y g++-arm-linux-gnueabihf build-essential
       - uses: cli/gh-extension-precompile@v2
