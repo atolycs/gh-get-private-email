@@ -19,7 +19,7 @@ if [ "$COMSPEC" != "" ]; then
   CGO_ENABLED=1 ${GOBUILD} ${WINGOOPTS} ${VERSION_OPTS} -o $WINBIN
   $WINBIN
 else
-  make linux
+  make CGO_ENABLED=0 linux
   if [ $CI ] && [ "${RUUNER_OS}" == "ubuntu-24.04-arm" ]; then
     make CC=arm-linux-gnueabihf-gcc CXX=arm-linux-gnueabihf-g++ GOARCH=arm GOARM=6 linux
   fi
