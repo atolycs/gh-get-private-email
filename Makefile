@@ -40,7 +40,7 @@ endif
 
 ifeq ($(MAKECMDGOALS), linux)
 ifeq ($(GOARCH), arm)
-	GO_OPTS := -trimpath -x -ldflags "-linkmode external -extldflags -static"
+	GO_OPTS := -trimpath -x -v -ldflags "-linkmode external -extldflags -static"
 else
 	#GO_OPTS = -x -ldflags "-linkmode external -extldflags -static -X github.com/atolycs/gh-get-private-email/internal/version.version=$(VERSION)"
 	GO_OPTS := -trimpath -x -v
