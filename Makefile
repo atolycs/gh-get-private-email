@@ -36,11 +36,13 @@ export GO_LDFLAGS := $(GO_LDFLAGS_VERSION)
 
 export GO_OPTS := -x -ldflags "$(GO_LDFLAGS)"
 
+UNAME_MACHINE := $(shell uname -m)
+UNAME_OS := $(shell uname -s)
+
 ifeq ($(OS), Windows_NT)
 	GOOS := windows
 	GOMAKEFILE := make-windows.mk
 else
-	UNAME_OS := $(shell uname -s)
 	ifeq ($(UNAME_OS), Linux)
 		GOOS := linux
 		GO_LDFLAGS := $(GO_LDFLAGS_VERSION) 
@@ -56,7 +58,6 @@ else
 	endif
 endif
 
-UNAME_MACHINE := $(shell uname -m)
 
 ifeq ($(UNAME_MACHINE), x86_64)
 	export GOARCH := amd64
@@ -64,7 +65,9 @@ else ifeq ($(UNAME_MACHINE), i686)
 	export GOARCH := 386
 else ifeq ($(UNAME_MACHINE), aarch64)
 	export GOARCH := arm64
-else 
+else ifeq ($(UNAME_OS), Darwin)
+	export GOARCH := arm64
+else
 	export GOARCH := unknown
 endif
 
