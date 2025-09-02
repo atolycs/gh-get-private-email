@@ -1,12 +1,11 @@
+export APP_NAME = gh-get-private-email
+export VERSION := $(shell git tag -l --sort=v:refname "v*" | tail -1)
+export GO      = go
+export GOBUILD = $(GO) build
 
-APP_NAME = gh-get-private-email
-VERSION := $(shell git tag -l --sort=v:refname "v*" | tail -1)
-GO      = go
-GOBUILD = $(GO) build
+export CWD := $(shell pwd)
 
-CWD := $(shell pwd)
-
-DIST := ./dist
+export DIST := ./dist
 
 # gpg sign
 GPGBIN  := gpg
@@ -24,61 +23,59 @@ UNAME_OS ?= $(shell uname -s)
 UNAME_ARCH ?= $(shell uname -m)
 
 # Builded execute file
-WINBIN    = $(DIST)/$(APP_NAME)_$(VERSION)-windows-$(GOARCH).exe
-LINUXBIN  = $(DIST)/$(APP_NAME)_$(VERSION)-linux-$(GOARCH)
+export WINBIN    = $(DIST)/$(APP_NAME)_$(VERSION)-windows-$(GOARCH).exe
+export LINUXBIN  = $(DIST)/$(APP_NAME)_$(VERSION)-linux-$(GOARCH)
+export DARWINBIN = $(DIST)/$(APP_NAME)_$(VERSION)-darwin-$(GOARCH)
 TESTWINBIN   = $(DIST)/$(APP_NAME)_$(VERSION)-windows-$(GOARCH)-test.exe
 TESTLINUXBIN = $(DIST)/$(APP_NAME)_$(VERSION)-linux-$(GOARCH)-test
 
-SRC	:= main.go
+export SRC	:= main.go
 #GO_OPTS = -x -ldflags "-linkmode external -extldflags -static -X github.com/atolycs/gh-get-private-email/internal/version.version=$(VERSION)"
+# export GO_LDFLAGS_VERSION := -X 'github.com/atolycs/gh-get-private-email/internal/version.version=$(VERSION)'
+export GO_LDFLAGS := $(GO_LDFLAGS_VERSION)
 
-ifeq ($(MAKECMDGOALS), win64)
-	CC := x86_64-w64-mingw32-gcc
-	CXX := x86_64-w64-mingw32-g++
-	GO_OPTS := -x -ldflags "-static -X github.com/atolycs/gh-get-private-email/internal/version.version=$(VERSION)"
-endif
+export GO_OPTS := -x -ldflags "$(GO_LDFLAGS)"
 
-ifeq ($(MAKECMDGOALS), linux)
-ifeq ($(GOARCH), arm)
-	GO_OPTS := -trimpath -x -v -ldflags "-linkmode external -extldflags -static"
+UNAME_MACHINE := $(shell uname -m)
+UNAME_OS := $(shell uname -s)
+
+ifeq ($(OS), Windows_NT)
+	GOOS := windows
+	GOMAKEFILE := make-windows.mk
 else
-	#GO_OPTS = -x -ldflags "-linkmode external -extldflags -static -X github.com/atolycs/gh-get-private-email/internal/version.version=$(VERSION)"
-	GO_OPTS := -trimpath -x -v
+	ifeq ($(UNAME_OS), Linux)
+		GOOS := linux
+		GO_LDFLAGS := $(GO_LDFLAGS_VERSION) 
+		GOMAKEFILE := make-linux.mk
+	else ifeq ($(UNAME_OS), Darwin)
+		GOOS := darwin
+		GOMAKEFILE := make-mac.mk
+	else
+		GOOS := unknown
+		GOMAKEFILE := make-unknow.mk
+		echo "Error: OS unknown"
+		exit 1
+	endif
 endif
+
+
+ifeq ($(UNAME_MACHINE), x86_64)
+	export GOARCH := amd64
+else ifeq ($(UNAME_MACHINE), i686)
+	export GOARCH := 386
+else ifeq ($(UNAME_MACHINE), aarch64)
+	export GOARCH := arm64
+else ifeq ($(UNAME_OS), Darwin)
+	export GOARCH := arm64
+else
+	export GOARCH := unknown
 endif
 
 
-$(WINBIN): $(SRC)
-	echo $(MAKECMDGOALS)
-	GOOS=$(GOOSWIN) GOARCH=$(GOARCH) CGO_ENABLED=1 CC=$(CC) CXX=$(CXX) $(GOBUILD) -o $@ $(GO_OPTS) $<
+.PHONY: env build clean
 
-$(LINUXBIN): $(SRC) 
-	GOOS=$(GOOSLINUX) GOARCH=$(GOARCH) GOARM=$(GOARM) $(GOBUILD) -o $@ $(GO_OPTS) $<
+env:
+	$(MAKE) -f $(GOMAKEFILE) env
 
-$(TESTWINBIN): $(SRC)
-	GOOS=$(GOOSWIN) GOARCH=$(GOARCH) CGO_ENABLED=1 $(GOBUILD) -o $@ $(GO_OPTS) $<
-
-$(TESTLINUXBIN): $(SRC)
-	GOOS=$(GOOSLINUX) GOARCH=$(GOARCH) GOARM=$(GOARM) $(GOBUILD) -o $@ $(GO_OPTS) $<
-	ln -sf $(shell realpath $@) $(CWD)/$(APP_NAME)
-
-.PHONY: win64 linux test-linux test-win clean sign
-
-%/app-version.txt: 
-	echo $(VERSION) >> $@
-
-win64: internal/version/app-version.txt $(WINBIN)
-linux: internal/version/app-version.txt $(LINUXBIN)
-
-test-win: $(TESTWINBIN)
-test-linux: $(TESTLINUXBIN)
-
-dist/%.sig: $(WINBIN) $(LINUXBIN)
-	$(foreach path, $^, $(GPGBIN) $(GPGOPTS) -o $(path).sig $(path);)
-
-sign: dist/*.sig
-
-clean:
-	rm -f $(DIST)/*
-
-all: win64 linux
+build:
+	$(MAKE) -f $(GOMAKEFILE) go-build
