@@ -9,5 +9,5 @@ import (
 var version []byte
 
 func CallVersion() {
-	fmt.Printf("get-private-email ver: %s\n", version)
+	fmt.Printf("get-private-email ver: %s", version)
 }
